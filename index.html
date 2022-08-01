@@ -31,7 +31,7 @@
 <p>Many people eat cereal every day. Thus, having a solid knowledge of the dietary content of cereal, as well as content of food in relation to its total caloric mass can be important in managing one's health. Data taken from <a href="https://www.kaggle.com/datasets/crawford/80-cereals">here</a> </p>
 <body onload='init()'>
   <button class="b1" onclick="Fat()">Caloric Content</button>
-  <button class="b2" onclick="Protein()">Protein vs Popularity</button>
+  <button class="b2" onclick="Protein()">Protein vs Fat</button>
   <button class="b3" onclick="PopularityChart()">Popularity vs Display</button>
   <br>
 <svg class="chart"></svg>
@@ -152,7 +152,7 @@ var tooltip = d3.select("#tooltip");
 
 </script>
 <p>There are 3 scenes that show some interesting narratives about cereal. The first button will take you to a bar chart which shows some of the popular cereals, and their caloric content, which is very important to health. Hovering over a bar will also display the sodium content of the cereal, which is very important in health considerations.</p>
-<p>The second button will show some cereals with both their fat and protein content. This will help to manage healthy fat and protein intake. Hovering over a circle on the graph will reveal the type of cereal in question.</p>
-<p>The third button is not a measure of health factors, but rather of popularity. Here we can see how high a cereal is rated on a scale of 1 to 100, as well as what shelf it is placed on (1st shelf, 2nd shelf, 3rd shelf). Hovering will also show the name of the cereal with the given rating and shelf location. This allows us to compare not only the healtiness and popularity of cereal, but also how where it is placed in stores affects its rating. </p>
+<p>The second button will show some cereals with both their fat and protein content with protein in the x axis and fat in the y axis. This will help to manage healthy fat and protein intake. Hovering over a circle on the graph will reveal the type of cereal in question.</p>
+<p>The third button is not a measure of health factors, but rather of popularity, where the number of the shelf a cereal is displayed on is in the x axis, and it's consumer rating from 0 to 100 is on the y axis. Here we can see how high a cereal is rated on a scale of 1 to 100, as well as what shelf it is placed on (1st shelf, 2nd shelf, 3rd shelf). Hovering will also show the name of the cereal with the given rating and shelf location. This allows us to compare not only the healtiness and popularity of cereal, but also how where it is placed in stores affects its rating. </p>
 </body>
 </html>
