@@ -1,0 +1,158 @@
+<html>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<style> 
+  .chart circle {fill: rgb(202, 57, 188); stroke: black;} 
+  rect {fill: rgb(217, 39, 202); stroke: black;}
+  
+  .button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.button1 {background-color: #4CAF50;}
+.button2 {background-color: #008CBA;}
+  body{align-items:center;}
+  #tooltip {
+     opacity: 0;
+
+     width:200px; height: 40px;
+     background: white;
+     border: 0px;
+  }
+
+  </style>
+<h1>Cereal Dietary Information Visualization</h1>
+<p>Many people eat cereal every day. Thus, having a solid knowledge of the dietary content of cereal, as well as content of food in relation to its total caloric mass can be important in managing one's health. Data taken from <a href="https://www.kaggle.com/datasets/crawford/80-cereals">here</a> </p>
+<body onload='init()'>
+  <button class="b1" onclick="Fat()">Caloric Content</button>
+  <button class="b2" onclick="Protein()">Protein vs Popularity</button>
+  <button class="b3" onclick="PopularityChart()">Popularity vs Display</button>
+  <br>
+<svg class="chart"></svg>
+<svg class="chart2"></svg>
+<div id="tooltip"></div>
+
+
+<script>
+  async function Fat() {
+    d3.select(".chart").selectAll("*").remove();
+    var data = await d3.csv('cereal.csv');
+    var x = d3.scaleBand().domain(["Wheaties Honey Gold","100% Bran","100% Natural Bran","All-Bran","All-Bran with Extra Fiber","Almond Delight","Apple Cinnamon Cheerios","Apple Jacks","Basic 4","Bran Chex","Bran Flakes","Cap'n'Crunch","Cheerios"]).range([0,500]);
+    var y = d3.scaleLinear().domain([0,100]).range([500,0]);
+    var tooltip = d3.select("#tooltip");
+    xdomain = [0,12];
+    xrange = [0,500];
+    ydomain = [0, 200];
+    yrange = [500,0];
+    cdomain = [0,100];
+    crange = ['blue','orange'];
+    var xs = d3.scaleBand().domain([0,1,2,3,4,5,6,7,8,9,10,11,12]).range([0,500]);
+    ys = d3.scaleLinear().domain(ydomain).range(yrange);
+    cs = d3.scaleLinear().domain(cdomain).range(crange);
+
+    d3.select(".chart")
+      .attr("width", 600)
+      .attr("height", 700)
+      .append("g")
+      .attr("transform","translate(50,50)")
+      .selectAll('rect').data(data).enter().append('rect')
+        .attr('x',function(d,i) {return xs(i);})
+        .attr('y', function(d,i) {return ys(d.calories);})
+        .attr('width',function(){return 20;})
+        .attr('height', function(d,i) {return 500 - ys(d.calories);})
+        .on("mouseover", function(d,i) {
+       tooltip.style("opacity",1)
+         .style("left",(d3.event.pageX)+"px")
+         .style("top", (d3.event.pageY)+"px")
+         .html("Sodium Content in mg: " + (d.sodium));
+     })
+    .on("mouseout", function() { tooltip.style("opacity",0) });
+
+    d3.select("svg").append("g")
+      .attr("transform","translate(50,50)")
+      .call(d3.axisLeft(y));
+
+    d3.select("svg").append("g")
+      .attr("transform","translate(50,550)")
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("y", 0)
+      .attr("x", 9)
+      .attr("dy", ".35em")
+      .attr("transform", "rotate(90)")
+      .style("text-anchor", "start")
+
+  }
+async function Protein() {
+  d3.select(".chart").selectAll("*").remove();
+  var x = d3.scaleLinear().domain([0,15]).range([0,600]);
+  var y = d3.scaleLinear().domain([0,15]).range([600,0]);
+
+  var data = await d3.csv('cereal.csv');
+var tooltip = d3.select("#tooltip");
+  d3.select(".chart")
+    .attr("width", 600)
+    .attr("height", 600)
+    .append("g")
+    .attr("transform","translate(50,50)")
+    .selectAll('circle').data(data).enter().append('circle')
+    .attr('r', function(d,i) {return 2;})
+    .attr('cx', function(d,i) {return x(d.protein);})
+    .attr('cy', function(d,i) {return y(d.fat + 2);})
+    .on("mouseover", function(d,i) {
+       tooltip.style("opacity",1)
+         .html("Cereal Type: " + d.name);
+     })
+    .on("mouseout", function() { tooltip.style("opacity",0) });
+
+
+  d3.select("svg").append("g")
+    .attr("transform","translate(50,50)")
+    .call(d3.axisLeft(y));
+  d3.select("svg").append("g")
+    .attr("transform","translate(50,580)")
+    .call(d3.axisBottom(x).tickFormat(d3.format("~s")));
+}
+async function PopularityChart() {
+  d3.select(".chart").selectAll("*").remove();
+  var x = d3.scaleLinear().domain([0,4]).range([0,600]);
+  var y = d3.scaleLinear().domain([0,100]).range([600,0]);
+
+  var data = await d3.csv('cereal.csv');
+var tooltip = d3.select("#tooltip");
+  d3.select(".chart")
+    .attr("width", 600)
+    .attr("height", 600)
+    .append("g")
+    .attr("transform","translate(50,50)")
+    .selectAll('circle').data(data).enter().append('circle')
+    .attr('r', function(d,i) {return 2;})
+    .attr('cx', function(d,i) {return x(d.shelf);})
+    .attr('cy', function(d,i) {return y(d.rating);})
+    .on("mouseover", function(d,i) {
+       tooltip.style("opacity",1)
+         .html("Cereal Type: " + d.name);
+     })
+    .on("mouseout", function() { tooltip.style("opacity",0) });
+
+
+  d3.select("svg").append("g")
+    .attr("transform","translate(50,50)")
+    .call(d3.axisLeft(y));
+  d3.select("svg").append("g")
+    .attr("transform","translate(50,580)")
+    .call(d3.axisBottom(x).tickValues([1,2,3]).tickFormat(d3.format("~s")));
+}
+
+</script>
+<p>There are 3 scenes that show some interesting narratives about cereal. The first button will take you to a bar chart which shows some of the popular cereals, and their caloric content, which is very important to health. Hovering over a bar will also display the sodium content of the cereal, which is very important in health considerations.</p>
+<p>The second button will show some cereals with both their fat and protein content. This will help to manage healthy fat and protein intake. Hovering over a circle on the graph will reveal the type of cereal in question.</p>
+<p>The third button is not a measure of health factors, but rather of popularity. Here we can see how high a cereal is rated on a scale of 1 to 100, as well as what shelf it is placed on (1st shelf, 2nd shelf, 3rd shelf). Hovering will also show the name of the cereal with the given rating and shelf location. This allows us to compare not only the healtiness and popularity of cereal, but also how where it is placed in stores affects its rating. </p>
+</body>
+</html>
